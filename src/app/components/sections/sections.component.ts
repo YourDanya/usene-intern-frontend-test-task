@@ -1,6 +1,7 @@
 import {Component} from '@angular/core'
 import {Input} from '@angular/core'
 import {CheckPasswordStrengthService} from 'src/app/services/check-password-strength/check-password-strength.service'
+import {PasswordStrength} from 'src/app/types/password-strength.type'
 
 @Component({
     selector: 'app-sections',
@@ -10,32 +11,40 @@ import {CheckPasswordStrengthService} from 'src/app/services/check-password-stre
 })
 export class SectionsComponent {
     sections = {first: 'gray', second: 'gray', third: 'gray'}
+    passwordStrength: PasswordStrength
 
     constructor(private checkPasswordStrengthService: CheckPasswordStrengthService) {}
-
+    
     @Input()
     set password(password: string) {
-        if (password.length === 0) {
-            this.setSections('gray', 'gray', 'gray')
-        } else if (password.length < 8) {
-            this.setSections('red', 'red', 'red')
-        } else {
-            this.checkStrength(password)
+        const newPasswordStrength = this.checkPasswordStrengthService.check(password)
+        
+        if (this.passwordStrength !== newPasswordStrength) {
+            this.passwordStrength = newPasswordStrength
+            this.updateSectionsColors()
         }
     }
 
-    checkStrength(password: string) {
-        switch (this.checkPasswordStrengthService.check(password)) {
-            case 'strong': {
-                this.setSections('green', 'green', 'green')
+    updateSectionsColors() {
+        switch (this.passwordStrength) {
+            case 'empty': {
+                this.setSections('gray', 'gray', 'gray')
+                break
+            }
+            case 'short': {
+                this.setSections('red', 'red', 'red')
+                break
+            }
+            case 'easy': {
+                this.setSections('red', 'gray', 'gray')
                 break
             }
             case 'medium': {
                 this.setSections('yellow', 'yellow', 'gray')
                 break
             }
-            case 'easy': {
-                this.setSections('red', 'gray', 'gray')
+            case 'strong': {
+                this.setSections('green', 'green', 'green')
             }
         }
     }

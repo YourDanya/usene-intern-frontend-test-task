@@ -1,1 +1,1 @@
-export type PasswordStrengthType = 'strong' | 'medium' | 'easy'
+export type PasswordStrength = 'empty' | 'short' | 'easy' | 'medium' | 'strong'
