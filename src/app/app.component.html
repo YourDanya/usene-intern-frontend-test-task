@@ -1,17 +1,12 @@
 <div class="app">
-    <div class="app__container">
-        <input
-                [value]="value"
-                (input)="onChange($event)"
-                class="app__field"
-        >
-        <div class="app__sections">
-            <div class="app__section" [style.background-color]="sections.first"></div>
-            <div class="app__section" [style.background-color]="sections.second"></div>
-            <div class="app__section" [style.background-color]="sections.third"></div>
-        </div>
-    </div>
+    <form class="app__form" [formGroup]="form">
+        <app-input
+                formControlName="password"
+                [class]="'app__input'"
+                [type]="'password'"
+        />
+        <app-sections [password]="form.controls.password.value"/>
+    </form>
 </div>
-
 
 <router-outlet></router-outlet>
